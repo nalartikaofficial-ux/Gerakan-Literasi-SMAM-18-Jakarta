@@ -33,7 +33,11 @@
                 <h2 class="text-lg font-bold text-slate-900 mb-1">Form Pengisian Literasi Selasa</h2>
                 <p class="text-xs text-slate-500 mb-6">Pilih kelas, nama lengkap, tanggal kegiatan Selasa, catatan, dan foto hasil ringkasan.</p>
 
-                <form id="literacyForm" onsubmit="handleSubmit(event)" class="space-y-4">
+                <!-- Bagian Form -->
+                <form id="literacyForm" action="URL_WEB_APP_ANDA_DISINI" method="POST" target="hidden_iframe">
+                    <!-- isi elemen form seperti select kelas, nama, tanggal, notes -->
+                    <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-xl">Kirim Data Literasi</button>
+                </form>
                     
                     <!-- Pilihan Kelas -->
                     <div>
@@ -119,7 +123,7 @@
 
     <script>
         // Ganti dengan URL Web App Apps Script Anda di sini:
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzYkWeoM8HGoTFqgOvBp6AykDItIzYgA3Abxn7zm0joWPLnUODA9m_z1s6GF77tHcGE/exec";
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyoEnGQoGiLG5YF1aLxySIHS2-Stv7dvKAgfJ5p9c84WYdH_XUwrG3c5_i2e2UJuBEh/exec";
 
         const levelThemes = {
             "X": {
@@ -255,5 +259,9 @@
             }
         }
     </script>
+
+    <!-- Iframe Tersembunyi di bawah sebelum penutup body -->
+    <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(submitted){alert('Data berhasil dikirim!'); window.location.reload();}"></iframe>
+
 </body>
 </html>
