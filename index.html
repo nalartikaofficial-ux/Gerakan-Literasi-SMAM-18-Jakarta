@@ -12,11 +12,10 @@
     <div class="max-w-2xl mx-auto min-h-screen p-4 sm:p-6 flex flex-col justify-between">
         
         <div>
-            <!-- Header Sekolah dengan Logo dari Repository Lokal -->
+            <!-- Header Sekolah dengan Logo Lokal -->
             <header class="bg-gradient-to-r from-blue-900 to-indigo-950 text-white p-6 rounded-2xl shadow-lg mb-6 text-center">
                 <div class="flex justify-center mb-3">
-                    <!-- Memanggil logo langsung dari folder repository GitHub -->
-                    <img src="logosmam18.png" alt="Logo SMA Muhammadiyah 18 Jakarta" class="w-20 h-20 object-contain drop-shadow-md rounded-full bg-white p-1">
+                    <img src="logosmam18.jpg" alt="Logo SMA Muhammadiyah 18 Jakarta" class="w-20 h-20 object-contain drop-shadow-md rounded-full bg-white p-1">
                 </div>
                 <p class="text-[11px] tracking-widest text-blue-200 uppercase font-semibold">Gerakan Literasi Sekolah</p>
                 <h1 class="text-xl sm:text-2xl font-bold mt-1">SMA Muhammadiyah 18 Jakarta</h1>
@@ -32,7 +31,7 @@
             <!-- Form Presensi & Tugas -->
             <main class="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-100">
                 <h2 class="text-lg font-bold text-slate-900 mb-1">Form Pengisian Literasi Selasa</h2>
-                <p class="text-xs text-slate-500 mb-6">Pilih kelas, nama lengkap, tanggal kegiatan Selasa, dan catatan judul bacaanmu.</p>
+                <p class="text-xs text-slate-500 mb-6">Pilih kelas, nama lengkap, tanggal kegiatan Selasa, catatan, dan foto hasil ringkasan.</p>
 
                 <form id="literacyForm" onsubmit="handleSubmit(event)" class="space-y-4">
                     
@@ -84,10 +83,17 @@
 
                     <!-- Judul Bacaan / Catatan -->
                     <div>
-                        <label for="notes" class="block text-xs font-semibold text-slate-700 mb-1 uppercase">Judul Bacaan / Catatan</label>
+                        <label for="notes" class="block text-xs font-semibold text-slate-700 mb-1 uppercase">Judul Bacaan / Catatan Ringkasan</label>
                         <textarea id="notes" rows="3" required
                             class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 outline-none text-sm resize-none"
                             placeholder="Contoh: jaga alam dengan tradisi Nusantara..."></textarea>
+                    </div>
+
+                    <!-- Upload Foto Hasil Ringkasan -->
+                    <div>
+                        <label for="photoFile" class="block text-xs font-semibold text-slate-700 mb-1 uppercase">Foto Hasil Ringkasan Buku (Opsional/Wajib)</label>
+                        <input type="file" id="photoFile" accept="image/*"
+                            class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 border border-slate-300 rounded-xl p-1.5 bg-white">
                     </div>
 
                     <button type="submit" id="submitBtn"
@@ -98,10 +104,10 @@
 
                 <!-- Status Berhasil / Loading -->
                 <div id="successMessage" class="hidden mt-4 p-4 bg-emerald-50 border border-emerald-200 rounded-xl text-center">
-                    <p class="text-emerald-800 font-semibold text-sm">Data literasi berhasil masuk ke Google Sheet!</p>
+                    <p class="text-emerald-800 font-semibold text-sm">Data & foto literasi berhasil masuk ke Google Sheet!</p>
                 </div>
                 <div id="loadingMessage" class="hidden mt-4 p-3 text-center text-xs text-blue-600 font-medium">
-                    Sedang mengirim data ke Google Sheet...
+                    Sedang mengunggah data ke Google Sheet...
                 </div>
             </main>
         </div>
@@ -148,7 +154,7 @@
         const schoolData = {
             "X-1": ["AHMAD ARRAZY DARMAWAN", "AINI ROHMATUN NI'MAH", "AISHA HUMAIRA", "AISYAH ADELIA PUTRI", "AMMAR RIZKY PRATAMA WIDYATMAN", "ANDHIKA ABIMANYU", "ANJANY REGINA PUTRI", "AYLA SUCI NUR FADILA", "BEVAN AZFAR", "BIANCA MALIKA PUTRI", "BINTAN HUMAERA", "BINTANG ATTARAHMAN", "FACHRI NAFIS RAMADHAN", "LAYLATUL KHUSNA", "LUKEN MARSAL", "MAHSYACH ZIANKA APRILIA MUS", "MAZAYA YUMMI QATRUNNADA", "MUHAMMAD HAIKAL PERDANA", "MUHAMMAD LUTHFI AZHAR", "MUHAMMAD NAUFAL AL GHIFARI", "MUHAMMAD RIZKY SYAHREZA", "MUHAMMAD SULTHON FADHIL", "NAHDAH QARINA WAHYUDI", "NOUREENA HERREVA", "RAISHA RAMADHANI", "RIFAT AKBAR BAIHAQI", "SAFA ALMIRA ARMAN", "TEGAR PRASETYA", "WALDAN ATHALLAH"],
             "X-2": ["ALEESYA DANIA", "ALMIRA FATHIYYAH ZAHRAH", "AMMARA SALSABILA", "ARISTYA DENINDRA A", "AZZAM NUUR JASMANDA", "CALLISTA AZKA PHILLOTRA", "DAMAR WULAN", "EVAN RADIZA LEKSONO", "FATHI IZZAT ADNANTO", "INDA KAHFIE ASSYIFA", "JASMINE RAMADHANI", "KAILA MUNTAZAH PURNASARI", "KHEDIRA TYAN ADLAN", "LEVANA MISALLY ABRAR", "MAILA PUSPA ADILAH TIFFA", "MUHAMAD FAHREZA MAULANA", "MUHAMMAD FARIS RIDWAN ZAHRAN", "MUHAMMAD HUSAIN HAEKAL", "MUHAMMAD RIZKI RAMADHAN", "MUTIARA AZKA K", "NAJWAA FINKA", "NAZLAH MUTIA GEUBRINA", "RAKA ADITYA NATARESWARA", "RANGGA RADITYA PRAWIRA NEGARA", "REZA MAHARDIKA PUTRANTO", "RIFAT YURI EL GUMELAR", "SATRIO ADHAWAN MOSALEH", "SYA'ARIL MUHAMAD SOEDAK", "WAFI ARKAAN FADHILA", "WILDAN KHAHLIL RAMADHAN", "ZIA AULIA RIZKI"],
-            "X-3": ["ANDI ALIKA R", "ARINI LATIFAH KHAIRUNISSA", "ATSIL AQILAH", "FACHRI AL BUKHARI", "FAIZ RIJLA IRSYADDANI", "FANNISA NUR AULIA", "FATHY JIYAD NAZMY", "GEVIN JULIO DHARMA", "GHOZI FATIN ROBBANI", "HABBIYAN ABBIBI", "HAYA WIDADIRA", "IVANA FELICIA AZITA", "KEENAN KASYARA ARIFIN", "KHAIRUNNISA FALIH RAMADHANI", "KHANSA AMANY ADROVA", "LUTHFI RIZKY RAMAHDAN", "MALIKA FAHMIEDA FRANAYA", "MUHAMMAD ARSYAD ABDUL FATAH", "MUHAMMAD FELIX RADITYA", "MUHAMMAD GALANK AL-FATHIR", "MUHAMMAD JULIO NAFIS NUGROHO", "MUHAMMAD LEROY", "OKTAVIA DIAN ANGGRAENI", "OTTO BAYU RAFFAEL", "RAFAILLAH JINAN RIHAB", "RAIHAN MUZAKKI ESYAM", "RAZAN ISLAM PUTRA", "RAZITA QONITA", "RENA ADELLA DWIYANTO", "RYAN ZENO AL-FARRUQ ARYUS", "SILVIA FATIMAH PUTRI GUSTINO", "SYAFNA FAHIRA AZZAHRA", "ZHAFIRA HUMAIRA"],
+            "X-3": ["ANDI ALIKA R", "ARINI LATIFAH KHAIRUNISSA", "ATSIL AQILAH", "FACHRI AL BUKHARI", "FAIZ RIJLA IRSYADDANI", "FANNISA NUR AULIA", "FATHY JIYAD NAZMY", "GEVIN JULIO DHARMA", "GHOZI FATIN ROBBANI", "HABBIYAN ABBIBI", "HAYA WIDADIRA", "IVANA FELICIA AZITA", "KEENAN KASYARA ARIFIN", "KHAIRUNNISA FALIH RAMADHANI", "KHANSA AMANY ADROVA", "LUTHFI RIZKY RAMAHDAN", "MALIKA FAHMIEDA FRANAYA", "MUHAMAD ARSYAD ABDUL FATAH", "MUHAMMAD FELIX RADITYA", "MUHAMMAD GALANK AL-FATHIR", "MUHAMMAD JULIO NAFIS NUGROHO", "MUHAMMAD LEROY", "OKTAVIA DIAN ANGGRAENI", "OTTO BAYU RAFFAEL", "RAFAILLAH JINAN RIHAB", "RAIHAN MUZAKKI ESYAM", "RAZAN ISLAM PUTRA", "RAZITA QONITA", "RENA ADELLA DWIYANTO", "RYAN ZENO AL-FARRUQ ARYUS", "SILVIA FATIMAH PUTRI GUSTINO", "SYAFNA FAHIRA AZZAHRA", "ZHAFIRA HUMAIRA"],
             "X-4": ["AFIFAH AL KHANSA", "AISYAH ALIKA IRFAN", "HANIFAH RAMADHANTI", "KEYZIAH KIRANA RAHMADANI", "M. UWAIS ALTHAF FADILAH", "MUHAMMAD FARDHIANSYAH", "MUHAMMAD RAIHAN RAMADHAN", "NAZLA KHADIJAH RAMADHANI", "QIANA SHEZA ANNASYA", "RAIQAH SAAFIYAH", "SUFIANDI ARIF", "SYAUQI MISBAHUL IHSAN"],
             "XI-1": ["ADINDA YASMIN NOVISHA", "ADITYO MUHANDI BAHIY", "AIRA URFA SALSABILA", "ALFATHIR BANU SALVANSYAH", "ALFITRAH ALMUNAZZALAH", "ANAS NUR RAHIMI BUDIMAN", "ANGKASA KUSUMA", "ARI TITIS LANANG DAMARJATI", "ARKAN HARBY PUTRA", "ATHIRA FAKHRA DINAYA", "EVAN HILMANSYAH", "KENT ABBIYU AZIS", "KENZIA ANASTASYA RAMADHANI", "KEVIN ABUSTA", "KHANSA CITRA NUR' KAMILAH", "M. RAKHA SETIAWAN", "MUHAMMAD FAIZ AL FARISI", "MUHAMMAD IRSYAD HANAFI", "MUHAMMAD PUTRA PERDANA", "MUHAMMAD RENDY AFFANDI", "NADYA DZAIDA FURQAN", "NAUVAL EL SYAFIK", "RAFKA ADI NUGRAHA", "SAFHA NURUL MEDINA", "SYAFAATTIANY RACHMANIAH KOSASIH", "SYIFAA NATARI SETIAWAN", "SULISTIA RAMADHANI", "THUFAIL RADITYA ARSA", "VITO BHANU ANGGARA", "YOGA SANDI WIJAYA HARTO"],
             "XI-2": ["AHMAD KEVIN ZAIDAN", "AHMAD SYAUQI AZMI ALMUTSAQOF", "AIRA SUCIA RAMADHAN", "AL FIYYAH ZULFA", "ALAWIYA ZAFIRA", "ALFIN FARIS RABANI", "ALVIAN DWI RACHMANTO", "ARUMI WAHYU NINDYA", "ATIKA ZAHRA RATIFA", "ATILA RAFFI RIZQILLAH", "DAFFA ADRIAN NUGROHO", "EDRA SYABAN ALMUIS", "EQUINA KEYLA ZAFIRANSYAH", "FADHLI RAFFATA FAZIAN", "FISILMI KAFFA", "HABIBI ACHMAD ARQAM", "IBRA RAHMAN MOVIC", "IDRUS YUSUF SALIM", "JAMIL NASIK AL FARISI", "MAYLAVASYA TAMIMI", "MUHAMMAD AZKA AQILA", "MUHAMMAD HAFIZ ADLAN", "MUHAMMAD RIDHO KURNIAWAN", "RAYEN ALFARIZQI WANAJAYA", "REVANSYAH ANANDA UTAMA", "RIVANO SYNATRYA SANTANU KUSUMA", "SHAIMA AQEELA SYAHRIL", "SYAFFA MULYA NINGSIH", "ZHIVANA TIFA'UL RAHMAN", "JASIR HISYAM HADZAMI"],
@@ -189,39 +195,62 @@
 
         function handleSubmit(e) {
             e.preventDefault();
-            const payload = {
-                studentClass: document.getElementById('studentClass').value,
-                studentName: document.getElementById('studentName').value,
-                selectedDate: document.getElementById('tuesdayDate').value,
-                notes: document.getElementById('notes').value
+            
+            const fileInput = document.getElementById('photoFile');
+            const submitBtn = document.getElementById('submitBtn');
+            const loadingMsg = document.getElementById('loadingMessage');
+            
+            loadingMsg.classList.remove('hidden');
+            submitBtn.disabled = true;
+
+            const sendData = (base64Image, fileName, fileType) => {
+                const payload = {
+                    studentClass: document.getElementById('studentClass').value,
+                    studentName: document.getElementById('studentName').value,
+                    selectedDate: document.getElementById('tuesdayDate').value,
+                    notes: document.getElementById('notes').value,
+                    imageFile: base64Image,
+                    imageName: fileName,
+                    imageType: fileType
+                };
+
+                fetch(WEB_APP_URL, {
+                    method: 'POST',
+                    body: JSON.stringify(payload)
+                })
+                .then(res => res.json())
+                .then(data => {
+                    loadingMsg.classList.add('hidden');
+                    submitBtn.disabled = false;
+                    document.getElementById('literacyForm').reset();
+                    document.getElementById('studentName').innerHTML = '<option value="" disabled selected>-- Pilih Kelas Terlebih Dahulu --</option>';
+                    document.getElementById('studentName').disabled = true;
+                    document.getElementById('studentName').classList.add('bg-slate-100');
+                    document.getElementById('monthly-theme').innerText = `"Silakan pilih kelas terlebih dahulu..."`;
+
+                    const succ = document.getElementById('successMessage');
+                    succ.classList.remove('hidden');
+                    setTimeout(() => succ.classList.add('hidden'), 5000);
+                })
+                .catch(err => {
+                    loadingMsg.classList.add('hidden');
+                    submitBtn.disabled = false;
+                    alert("Gagal mengirim data. Pastikan koneksi dan URL Web App benar.");
+                });
             };
 
-            document.getElementById('loadingMessage').classList.remove('hidden');
-            document.getElementById('submitBtn').disabled = true;
-
-            fetch(WEB_APP_URL, {
-                method: 'POST',
-                body: JSON.stringify(payload)
-            })
-            .then(res => res.json())
-            .then(data => {
-                document.getElementById('loadingMessage').classList.add('hidden');
-                document.getElementById('submitBtn').disabled = false;
-                document.getElementById('literacyForm').reset();
-                document.getElementById('studentName').innerHTML = '<option value="" disabled selected>-- Pilih Kelas Terlebih Dahulu --</option>';
-                document.getElementById('studentName').disabled = true;
-                document.getElementById('studentName').classList.add('bg-slate-100');
-                document.getElementById('monthly-theme').innerText = `"Silakan pilih kelas terlebih dahulu..."`;
-
-                const succ = document.getElementById('successMessage');
-                succ.classList.remove('hidden');
-                setTimeout(() => succ.classList.add('hidden'), 5000);
-            })
-            .catch(err => {
-                document.getElementById('loadingMessage').classList.add('hidden');
-                document.getElementById('submitBtn').disabled = false;
-                alert("Gagal mengirim data. Pastikan URL Web App Google Script benar.");
-            });
+            // Jika siswa meng-upload foto
+            if (fileInput.files && fileInput.files[0]) {
+                const file = fileInput.files[0];
+                const reader = new FileReader();
+                reader.onload = function(uploadEvent) {
+                    sendData(uploadEvent.target.result, file.name, file.type);
+                };
+                reader.readAsDataURL(file);
+            } else {
+                // Jika tidak ada foto
+                sendData(null, null, null);
+            }
         }
     </script>
 </body>
