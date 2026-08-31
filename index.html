@@ -216,10 +216,14 @@
 
                 fetch(WEB_APP_URL, {
                     method: 'POST',
+                    mode: 'no-cors', // Mencegah blokir CORS dari Google
+                    headers: {
+                        'Content-Type': 'text/plain;charset=utf-8',
+                    },
                     body: JSON.stringify(payload)
                 })
-                .then(res => res.json())
-                .then(data => {
+                .then(() => {
+                    // Karena mode no-cors, kita asumsikan sukses ketika server merespons
                     loadingMsg.classList.add('hidden');
                     submitBtn.disabled = false;
                     document.getElementById('literacyForm').reset();
@@ -235,11 +239,10 @@
                 .catch(err => {
                     loadingMsg.classList.add('hidden');
                     submitBtn.disabled = false;
-                    alert("Gagal mengirim data. Pastikan koneksi dan URL Web App benar.");
+                    alert("Terjadi kendala pengiriman. Coba lagi beberapa saat.");
                 });
             };
 
-            // Jika siswa meng-upload foto
             if (fileInput.files && fileInput.files[0]) {
                 const file = fileInput.files[0];
                 const reader = new FileReader();
@@ -248,7 +251,6 @@
                 };
                 reader.readAsDataURL(file);
             } else {
-                // Jika tidak ada foto
                 sendData(null, null, null);
             }
         }
