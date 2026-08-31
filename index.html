@@ -9,7 +9,6 @@
 <body class="bg-slate-50 font-sans text-slate-800">
 
     <div class="max-w-2xl mx-auto min-h-screen p-4 sm:p-6 flex flex-col justify-between">
-        
         <div>
             <header class="bg-gradient-to-r from-blue-900 to-indigo-950 text-white p-6 rounded-2xl shadow-lg mb-6 text-center">
                 <div class="flex justify-center mb-3">
@@ -27,13 +26,14 @@
 
             <main class="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-100">
                 <h2 class="text-lg font-bold text-slate-900 mb-1">Form Pengisian Literasi Selasa</h2>
-                <p class="text-xs text-slate-500 mb-6">Pilih kelas, nama lengkap, tanggal kegiatan, dan catatan ringkasan buku.</p>
+                <p class="text-xs text-slate-500 mb-6">Pilih kelas, nama lengkap, tanggal kegiatan, catatan, dan foto ringkasan (Maks 1 MB).</p>
 
-                <form id="literacyForm" onsubmit="handleSubmit(event)" class="space-y-4">
+                <!-- Form dengan JS Handler untuk mengubah foto jadi Base64 lalu dikirim ke Iframe -->
+                <form id="literacyForm" onsubmit="handleFormSubmit(event)" class="space-y-4">
                     
                     <div>
                         <label for="studentClass" class="block text-xs font-semibold text-slate-700 mb-1 uppercase">Pilih Kelas</label>
-                        <select id="studentClass" onchange="handleClassChange()" required
+                        <select id="studentClass" name="studentClass" onchange="handleClassChange()" required
                             class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 outline-none text-sm bg-white">
                             <option value="" disabled selected>-- Pilih Kelas Anda --</option>
                             <optgroup label="Kelas X">
@@ -57,7 +57,7 @@
 
                     <div>
                         <label for="studentName" class="block text-xs font-semibold text-slate-700 mb-1 uppercase">Nama Murid</label>
-                        <select id="studentName" required disabled
+                        <select id="studentName" name="studentName" required disabled
                             class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 outline-none text-sm bg-slate-100">
                             <option value="" disabled selected>-- Pilih Kelas Terlebih Dahulu --</option>
                         </select>
@@ -65,7 +65,7 @@
 
                     <div>
                         <label for="tuesdayDate" class="block text-xs font-semibold text-slate-700 mb-1 uppercase">Pilih Tanggal Kegiatan (Hari Selasa)</label>
-                        <select id="tuesdayDate" required
+                        <select id="tuesdayDate" name="selectedDate" required
                             class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 outline-none text-sm bg-white">
                             <option value="" disabled selected>-- Pilih Tanggal Selasa --</option>
                             <option value="11/08/2026">Selasa, 11 Agustus 2026</option>
@@ -76,22 +76,35 @@
 
                     <div>
                         <label for="notes" class="block text-xs font-semibold text-slate-700 mb-1 uppercase">Judul Bacaan / Catatan Ringkasan</label>
-                        <textarea id="notes" rows="3" required
+                        <textarea id="notes" name="notes" rows="3" required
                             class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 outline-none text-sm resize-none"
                             placeholder="Contoh: jaga alam dengan tradisi Nusantara..."></textarea>
                     </div>
 
+                    <div>
+                        <label for="photoFile" class="block text-xs font-semibold text-slate-700 mb-1 uppercase">Foto Hasil Ringkasan (Maksimal 1 MB)</label>
+                        <input type="file" id="photoFile" accept="image/*" required onchange="checkFileSize(this)"
+                            class="w-full text-xs text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700 border border-slate-300 rounded-xl p-1.5 bg-white cursor-pointer">
+                        <p class="text-[11px] text-slate-400 mt-1">Ambil foto langsung dari HP atau pilih dari galeri komputer (Maks 1 MB).</p>
+                    </div>
+
+                    <!-- Hidden form yang dikirim ke iframe -->
+                    <input type="hidden" name="photoData" id="photoData">
+                    <input type="hidden" name="photoName" id="photoName">
+
                     <button type="submit" id="submitBtn"
                         class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl shadow-md transition text-sm">
-                        Kirim Data Literasi
+                        Kirim Data & Foto Literasi
                     </button>
                 </form>
 
+                <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="iframeLoaded()"></iframe>
+
                 <div id="successMessage" class="hidden mt-4 p-4 bg-emerald-50 border border-emerald-200 rounded-xl text-center">
-                    <p class="text-emerald-800 font-semibold text-sm">Data literasi berhasil masuk ke Google Sheet!</p>
+                    <p class="text-emerald-800 font-semibold text-sm">Data & foto berhasil masuk ke Google Sheet & Drive!</p>
                 </div>
                 <div id="loadingMessage" class="hidden mt-4 p-3 text-center text-xs text-blue-600 font-medium">
-                    Sedang mengirim data ke Google Sheet... Mohon tunggu...
+                    Sedang memproses dan mengirim data... Mohon tunggu...
                 </div>
             </main>
         </div>
@@ -102,8 +115,8 @@
     </div>
 
     <script>
-        // Masukkan URL Web App terbaru di sini:
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyD-9liJqzXipUclnf05AEcIO_NoZ_qx7GkC65E8Ee2RmA6tDi1NYGOSqptAkrYPVX_/exec";
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzdjM3uXpM87mESBKH5-vpcHKW2za7mcxetDejb1W-AFR1hEnUjfygVFTxL7qd2R8Fg/exec";
+        let isSubmitted = false;
 
         const levelThemes = {
             "X": {
@@ -177,45 +190,61 @@
             }
         }
 
-        function handleSubmit(e) {
-            e.preventDefault();
-            
-            const submitBtn = document.getElementById('submitBtn');
-            const loadingMsg = document.getElementById('loadingMessage');
-            
-            loadingMsg.classList.remove('hidden');
-            submitBtn.disabled = true;
+        function checkFileSize(input) {
+            if (input.files && input.files[0]) {
+                const fileSizeInMB = input.files[0].size / 1024 / 1024;
+                if (fileSizeInMB > 1) {
+                    alert("Ukuran foto terlalu besar (" + fileSizeInMB.toFixed(2) + " MB). Maksimal ukuran foto adalah 1 MB!");
+                    input.value = "";
+                }
+            }
+        }
 
-            // Menggunakan URLSearchParams agar terbaca sempurna sebagai form parameter di Apps Script
-            const formData = new URLSearchParams();
-            formData.append('studentClass', document.getElementById('studentClass').value);
-            formData.append('studentName', document.getElementById('studentName').value);
-            formData.append('selectedDate', document.getElementById('tuesdayDate').value);
-            formData.append('notes', document.getElementById('notes').value);
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            const fileInput = document.getElementById('photoFile');
+            
+            if (!fileInput.files || !fileInput.files[0]) {
+                alert("Harap unggah foto ringkasan buku terlebih dahulu!");
+                return;
+            }
 
-            fetch(WEB_APP_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                body: formData
-            })
-            .then(() => {
-                loadingMsg.classList.add('hidden');
-                submitBtn.disabled = false;
+            document.getElementById('loadingMessage').classList.remove('hidden');
+            document.getElementById('submitBtn').disabled = true;
+
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+            
+            reader.onload = function(uploadEvent) {
+                document.getElementById('photoData').value = uploadEvent.target.result;
+                document.getElementById('photoName').value = file.name;
+                
+                // Ubah action form ke URL Apps Script lalu submit secara manual ke iframe
+                const form = document.getElementById('literacyForm');
+                form.action = WEB_APP_URL;
+                form.target = "hidden_iframe";
+                isSubmitted = true;
+                form.submit();
+            };
+            reader.readAsDataURL(file);
+        }
+
+        let isSubmitted = false;
+        function iframeLoaded() {
+            if (isSubmitted) {
+                document.getElementById('loadingMessage').classList.add('hidden');
                 document.getElementById('literacyForm').reset();
                 document.getElementById('studentName').innerHTML = '<option value="" disabled selected>-- Pilih Kelas Terlebih Dahulu --</option>';
                 document.getElementById('studentName').disabled = true;
                 document.getElementById('studentName').classList.add('bg-slate-100');
                 document.getElementById('monthly-theme').innerText = `"Silakan pilih kelas terlebih dahulu..."`;
+                document.getElementById('submitBtn').disabled = false;
 
                 const succ = document.getElementById('successMessage');
                 succ.classList.remove('hidden');
                 setTimeout(() => succ.classList.add('hidden'), 5000);
-            })
-            .catch(err => {
-                loadingMsg.classList.add('hidden');
-                submitBtn.disabled = false;
-                alert("Gagal mengirim data. Periksa koneksi internet Anda.");
-            });
+                isSubmitted = false;
+            }
         }
     </script>
 </body>
