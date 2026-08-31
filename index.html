@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerakan Literasi Selasa - SMA Muhammadiyah 18 Jakarta</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 font-sans text-slate-800">
+
+    <div class="max-w-2xl mx-auto min-h-screen p-4 sm:p-6 flex flex-col justify-between">
+        
+        <div>
+            <!-- Header Sekolah dengan Logo dari Repository Lokal -->
+            <header class="bg-gradient-to-r from-blue-900 to-indigo-950 text-white p-6 rounded-2xl shadow-lg mb-6 text-center">
+                <div class="flex justify-center mb-3">
+                    <!-- Memanggil logo langsung dari folder repository GitHub -->
+                    <img src="logo-sma18.jpg" alt="Logo SMA Muhammadiyah 18 Jakarta" class="w-20 h-20 object-contain drop-shadow-md rounded-full bg-white p-1">
+                </div>
+                <p class="text-[11px] tracking-widest text-blue-200 uppercase font-semibold">Gerakan Literasi Sekolah</p>
+                <h1 class="text-xl sm:text-2xl font-bold mt-1">SMA Muhammadiyah 18 Jakarta</h1>
+                <p class="text-xs text-blue-300 mt-0.5">Tahun Ajaran 2026/2027</p>
+                
+                <!-- Kotak Tema Bulanan -->
+                <div class="mt-4 bg-white/10 backdrop-blur-md p-3.5 rounded-xl border border-white/20 text-left">
+                    <p class="text-[11px] text-blue-200 uppercase tracking-wider font-medium">Tema Literasi Bulan Ini</p>
+                    <p id="monthly-theme" class="text-base font-semibold text-white mt-0.5">Silakan pilih kelas terlebih dahulu...</p>
+                </div>
+            </header>
+
+            <!-- Form Presensi & Tugas -->
+            <main class="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-100">
+                <h2 class="text-lg font-bold text-slate-900 mb-1">Form Pengisian Literasi Selasa</h2>
+                <p class="text-xs text-slate-500 mb-6">Pilih kelas, nama lengkap, tanggal kegiatan Selasa, dan catatan judul bacaanmu.</p>
+
+                <form id="literacyForm" onsubmit="handleSubmit(event)" class="space-y-4">
+                    
+                    <!-- Pilihan Kelas -->
+                    <div>
+                        <label for="studentClass" class="block text-xs font-semibold text-slate-700 mb-1 uppercase">Pilih Kelas</label>
+                        <select id="studentClass" onchange="handleClassChange()" required
+                            class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 outline-none text-sm bg-white">
+                            <option value="" disabled selected>-- Pilih Kelas Anda --</option>
+                            <optgroup label="Kelas X">
+                                <option value="X-1">Kelas X.1</option>
+                                <option value="X-2">Kelas X.2</option>
+                                <option value="X-3">Kelas X.3</option>
+                                <option value="X-4">Kelas X.4</option>
+                            </optgroup>
+                            <optgroup label="Kelas XI">
+                                <option value="XI-1">Kelas XI.1</option>
+                                <option value="XI-2">Kelas XI.2</option>
+                                <option value="XI-3">Kelas XI.3</option>
+                            </optgroup>
+                            <optgroup label="Kelas XII">
+                                <option value="XII-1">Kelas XII.1</option>
+                                <option value="XII-2">Kelas XII.2</option>
+                                <option value="XII-3">Kelas XII.3</option>
+                            </optgroup>
+                        </select>
+                    </div>
+
+                    <!-- Pilihan Nama Siswa -->
+                    <div>
+                        <label for="studentName" class="block text-xs font-semibold text-slate-700 mb-1 uppercase">Nama Murid</label>
+                        <select id="studentName" required disabled
+                            class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 outline-none text-sm bg-slate-100">
+                            <option value="" disabled selected>-- Pilih Kelas Terlebih Dahulu --</option>
+                        </select>
+                    </div>
+
+                    <!-- Pilihan Tanggal Khusus Hari Selasa -->
+                    <div>
+                        <label for="tuesdayDate" class="block text-xs font-semibold text-slate-700 mb-1 uppercase">Pilih Tanggal Kegiatan (Hari Selasa)</label>
+                        <select id="tuesdayDate" required
+                            class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 outline-none text-sm bg-white">
+                            <option value="" disabled selected>-- Pilih Tanggal Selasa --</option>
+                            <option value="11/08/2026">Selasa, 11 Agustus 2026</option>
+                            <option value="18/08/2026">Selasa, 18 Agustus 2026</option>
+                            <option value="25/08/2026">Selasa, 25 Agustus 2026</option>
+                        </select>
+                    </div>
+
+                    <!-- Judul Bacaan / Catatan -->
+                    <div>
+                        <label for="notes" class="block text-xs font-semibold text-slate-700 mb-1 uppercase">Judul Bacaan / Catatan</label>
+                        <textarea id="notes" rows="3" required
+                            class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 outline-none text-sm resize-none"
+                            placeholder="Contoh: jaga alam dengan tradisi Nusantara..."></textarea>
+                    </div>
+
+                    <button type="submit" id="submitBtn"
+                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl shadow-md transition text-sm">
+                        Kirim Data Literasi
+                    </button>
+                </form>
+
+                <!-- Status Berhasil / Loading -->
+                <div id="successMessage" class="hidden mt-4 p-4 bg-emerald-50 border border-emerald-200 rounded-xl text-center">
+                    <p class="text-emerald-800 font-semibold text-sm">Data literasi berhasil masuk ke Google Sheet!</p>
+                </div>
+                <div id="loadingMessage" class="hidden mt-4 p-3 text-center text-xs text-blue-600 font-medium">
+                    Sedang mengirim data ke Google Sheet...
+                </div>
+            </main>
+        </div>
+
+        <footer class="text-center text-xs text-slate-400 mt-6 mb-2">
+            &copy; 2026 SMA Muhammadiyah 18 Jakarta
+        </footer>
+    </div>
+
+    <script>
+        // Ganti dengan URL Web App Apps Script Anda di sini:
+        const WEB_APP_URL = "GANTI_DENGAN_URL_WEB_APP_ANDA_DISINI";
+
+        const levelThemes = {
+            "X": {
+                8: "Laporan Hasil Observasi → Mengenal Lingkungan Sekitar",
+                9: "Laporan Hasil Observasi → Mengenal Lingkungan Sekitar",
+                10: "Anekdot → Humor yang Mendidik dan Mengkritik",
+                11: "Cerita Rakyat → Merawat Warisan Budaya Nusantara",
+                12: "Negosiasi → Membangun Kesepakatan dengan Bijak",
+                1: "Biografi → Meneladani Tokoh Inspiratif",
+                2: "Puisi → Merangkai Rasa dalam Kata"
+            },
+            "XI": {
+                8: "Berita → Mengabarkan Fakta, Menebar Manfaat",
+                9: "Berita → Mengabarkan Fakta, Menebar Manfaat",
+                10: "Argumentasi dalam Poster → Menyuarakan Kepedulian melalui Poster",
+                11: "Cerpen Sejarah → Belajar Sejarah melalui Cerita",
+                12: "Ceramah → Menebarkan Nilai Kebaikan",
+                1: "Drama → Panggung Ekspresi dan Kolaborasi",
+                2: "Karya Tulis Ilmiah → Meneliti untuk Memberi Solusi"
+            },
+            "XII": {
+                8: "Surat Lamaran Pekerjaan → Menyiapkan Langkah Menuju Karier",
+                9: "Surat Lamaran Pekerjaan → Menyiapkan Langkah Menuju Karier",
+                10: "Editorial → Menyikapi Isu dengan Bijaksana",
+                11: "Artikel → Menulis untuk Mengedukasi",
+                12: "Cerita Sejarah → Mengenang Masa Lalu, Menata Masa Depan",
+                1: "Kritik dan Esai → Berpikir Kritis, Menulis Cerdas",
+                2: "Novel → Menyelami Kehidupan melalui Novel"
+            }
+        };
+
+        const schoolData = {
+            "X-1": ["AHMAD ARRAZY DARMAWAN", "AINI ROHMATUN NI'MAH", "AISHA HUMAIRA", "AISYAH ADELIA PUTRI", "AMMAR RIZKY PRATAMA WIDYATMAN", "ANDHIKA ABIMANYU", "ANJANY REGINA PUTRI", "AYLA SUCI NUR FADILA", "BEVAN AZFAR", "BIANCA MALIKA PUTRI", "BINTAN HUMAERA", "BINTANG ATTARAHMAN", "FACHRI NAFIS RAMADHAN", "LAYLATUL KHUSNA", "LUKEN MARSAL", "MAHSYACH ZIANKA APRILIA MUS", "MAZAYA YUMMI QATRUNNADA", "MUHAMMAD HAIKAL PERDANA", "MUHAMMAD LUTHFI AZHAR", "MUHAMMAD NAUFAL AL GHIFARI", "MUHAMMAD RIZKY SYAHREZA", "MUHAMMAD SULTHON FADHIL", "NAHDAH QARINA WAHYUDI", "NOUREENA HERREVA", "RAISHA RAMADHANI", "RIFAT AKBAR BAIHAQI", "SAFA ALMIRA ARMAN", "TEGAR PRASETYA", "WALDAN ATHALLAH"],
+            "X-2": ["ALEESYA DANIA", "ALMIRA FATHIYYAH ZAHRAH", "AMMARA SALSABILA", "ARISTYA DENINDRA A", "AZZAM NUUR JASMANDA", "CALLISTA AZKA PHILLOTRA", "DAMAR WULAN", "EVAN RADIZA LEKSONO", "FATHI IZZAT ADNANTO", "INDA KAHFIE ASSYIFA", "JASMINE RAMADHANI", "KAILA MUNTAZAH PURNASARI", "KHEDIRA TYAN ADLAN", "LEVANA MISALLY ABRAR", "MAILA PUSPA ADILAH TIFFA", "MUHAMAD FAHREZA MAULANA", "MUHAMMAD FARIS RIDWAN ZAHRAN", "MUHAMMAD HUSAIN HAEKAL", "MUHAMMAD RIZKI RAMADHAN", "MUTIARA AZKA K", "NAJWAA FINKA", "NAZLAH MUTIA GEUBRINA", "RAKA ADITYA NATARESWARA", "RANGGA RADITYA PRAWIRA NEGARA", "REZA MAHARDIKA PUTRANTO", "RIFAT YURI EL GUMELAR", "SATRIO ADHAWAN MOSALEH", "SYA'ARIL MUHAMAD SOEDAK", "WAFI ARKAAN FADHILA", "WILDAN KHAHLIL RAMADHAN", "ZIA AULIA RIZKI"],
+            "X-3": ["ANDI ALIKA R", "ARINI LATIFAH KHAIRUNISSA", "ATSIL AQILAH", "FACHRI AL BUKHARI", "FAIZ RIJLA IRSYADDANI", "FANNISA NUR AULIA", "FATHY JIYAD NAZMY", "GEVIN JULIO DHARMA", "GHOZI FATIN ROBBANI", "HABBIYAN ABBIBI", "HAYA WIDADIRA", "IVANA FELICIA AZITA", "KEENAN KASYARA ARIFIN", "KHAIRUNNISA FALIH RAMADHANI", "KHANSA AMANY ADROVA", "LUTHFI RIZKY RAMAHDAN", "MALIKA FAHMIEDA FRANAYA", "MUHAMMAD ARSYAD ABDUL FATAH", "MUHAMMAD FELIX RADITYA", "MUHAMMAD GALANK AL-FATHIR", "MUHAMMAD JULIO NAFIS NUGROHO", "MUHAMMAD LEROY", "OKTAVIA DIAN ANGGRAENI", "OTTO BAYU RAFFAEL", "RAFAILLAH JINAN RIHAB", "RAIHAN MUZAKKI ESYAM", "RAZAN ISLAM PUTRA", "RAZITA QONITA", "RENA ADELLA DWIYANTO", "RYAN ZENO AL-FARRUQ ARYUS", "SILVIA FATIMAH PUTRI GUSTINO", "SYAFNA FAHIRA AZZAHRA", "ZHAFIRA HUMAIRA"],
+            "X-4": ["AFIFAH AL KHANSA", "AISYAH ALIKA IRFAN", "HANIFAH RAMADHANTI", "KEYZIAH KIRANA RAHMADANI", "M. UWAIS ALTHAF FADILAH", "MUHAMMAD FARDHIANSYAH", "MUHAMMAD RAIHAN RAMADHAN", "NAZLA KHADIJAH RAMADHANI", "QIANA SHEZA ANNASYA", "RAIQAH SAAFIYAH", "SUFIANDI ARIF", "SYAUQI MISBAHUL IHSAN"],
+            "XI-1": ["ADINDA YASMIN NOVISHA", "ADITYO MUHANDI BAHIY", "AIRA URFA SALSABILA", "ALFATHIR BANU SALVANSYAH", "ALFITRAH ALMUNAZZALAH", "ANAS NUR RAHIMI BUDIMAN", "ANGKASA KUSUMA", "ARI TITIS LANANG DAMARJATI", "ARKAN HARBY PUTRA", "ATHIRA FAKHRA DINAYA", "EVAN HILMANSYAH", "KENT ABBIYU AZIS", "KENZIA ANASTASYA RAMADHANI", "KEVIN ABUSTA", "KHANSA CITRA NUR' KAMILAH", "M. RAKHA SETIAWAN", "MUHAMMAD FAIZ AL FARISI", "MUHAMMAD IRSYAD HANAFI", "MUHAMMAD PUTRA PERDANA", "MUHAMMAD RENDY AFFANDI", "NADYA DZAIDA FURQAN", "NAUVAL EL SYAFIK", "RAFKA ADI NUGRAHA", "SAFHA NURUL MEDINA", "SYAFAATTIANY RACHMANIAH KOSASIH", "SYIFAA NATARI SETIAWAN", "SULISTIA RAMADHANI", "THUFAIL RADITYA ARSA", "VITO BHANU ANGGARA", "YOGA SANDI WIJAYA HARTO"],
+            "XI-2": ["AHMAD KEVIN ZAIDAN", "AHMAD SYAUQI AZMI ALMUTSAQOF", "AIRA SUCIA RAMADHAN", "AL FIYYAH ZULFA", "ALAWIYA ZAFIRA", "ALFIN FARIS RABANI", "ALVIAN DWI RACHMANTO", "ARUMI WAHYU NINDYA", "ATIKA ZAHRA RATIFA", "ATILA RAFFI RIZQILLAH", "DAFFA ADRIAN NUGROHO", "EDRA SYABAN ALMUIS", "EQUINA KEYLA ZAFIRANSYAH", "FADHLI RAFFATA FAZIAN", "FISILMI KAFFA", "HABIBI ACHMAD ARQAM", "IBRA RAHMAN MOVIC", "IDRUS YUSUF SALIM", "JAMIL NASIK AL FARISI", "MAYLAVASYA TAMIMI", "MUHAMMAD AZKA AQILA", "MUHAMMAD HAFIZ ADLAN", "MUHAMMAD RIDHO KURNIAWAN", "RAYEN ALFARIZQI WANAJAYA", "REVANSYAH ANANDA UTAMA", "RIVANO SYNATRYA SANTANU KUSUMA", "SHAIMA AQEELA SYAHRIL", "SYAFFA MULYA NINGSIH", "ZHIVANA TIFA'UL RAHMAN", "JASIR HISYAM HADZAMI"],
+            "XI-3": ["ALYA SYARAFANA HIDAYAT", "ANGRA ADISSAFA LINGGA MAHARDIKA", "ATALA RAFFA RIZQILLAH", "ATIFAH NURUL HUSNA", "AZKA AIMAN NABIL", "AZURA AR RAZZA ARAFAT", "BRENDA SEPTI MARIZA", "DAFFA SATRIA AL QAISHAR", "EVAN JUNIO ANGGASTARA", "FADLAN MUBAROK", "FAITH FADHILA UKAIL", "FARIDA MULYA AZIZAH", "HANIFA AULIA RASYIDDAH", "IBRAHIM DYLAN SYAHRUL", "IBRAHIM IKSAN SIDI", "JIHAN OLIVIA RAMADHANI", "MARITZA LATHIFAH SETIAWAN", "MARITZA PRASASTI RAMADHANY", "MUHAMMAD FARHAN WAHID", "MUHAMMAD FAWAZ IHSAN", "MUHAMMAD GHALI", "MUHAMMAD RAFA ZAVIER AZZAM", "NUR SABRI", "RANI OKTAVIA SAHITA", "RIVAN NUR ROCHIM", "SEVIA PUTRI YULYANTI", "SINDI ELITALIZAH KUTSA", "SULTAN ADHLY", "TALITHA AULIA RAMADHAN", "ZAYID AQLI RAHMAN", "ZIDAN ARSYAD ABBASY"],
+            "XII-1": ["ADELIA AYU HUMAIRA", "AGHNI ATHAYA", "ALMA ATTHALA MUKTI", "ALVITA AYU KYATI ATHIYYA", "ALYA KAMIL SYAHMINA", "ALYA SHAKILLA RABBANEE", "AMAR ABDURROZAQ", "AMIRAH MISYKAH NAURA", "ARFAN RAMADHAN", "ATHAYA RAHADATUL AISY", "CASSANDRA RAMADHANI", "CINTA ARYAND", "DINDA SYAFA KAMILA", "FAKHIRA SAILA", "FAKHRIANSYAH RAANII RASYDAN", "GHASSANIY SABRINA FAWZIYYAH", "IRDINA KAISAH NURFITRI", "IRSYAD KHAIRI AL KHALISH", "JADEN KEHL AL FATH", "KAYSHA FANEE FIORENZA", "KEISHA AINUN MAHYA", "KHALISHAH FATIN", "LUCREZIA ELVARETTA KAELA", "MUHAMAD FERDIAN ALHAFIZH", "MUHAMMAD RAAFI LESMANA", "NAKEISHA ALLENA MURPHY", "NAURATIQA RANA BANAFSAJ", "NURUL AINI", "RAHMA AZ ZAHRA", "RISKA SUKMA AMALIA", "TIARA TSANIYA RAHMAH", "ZAAHIR AHMAD MINARO", "ZHAFIRA NURULIZZATI"],
+            "XII-2": ["ALMADIEVA KEANU PUTRA DELHAYE", "ASYIRAH NA'ILAH TSABITAH", "BAZYLI ARRAZZAQ", "BINTANG RIZKY KAUTSAR", "DANYRAHMATTUHANDI", "DENNY RIZQI ANUGRAH BINTANG", "DHIYA IRDINA SYARAFANA", "EVAN MARTEN", "FHANIA ATHIENA SHALEHA", "HUWAIDA NURRIZKI FATHIYA", "IBNU AZIIZ AGFHAN", "JAU'ZAA AR-RUVY MUSTHOFA", "KADEK CARISSA FACHIRA", "KHADISA RANA SASKIA", "MAREBI NAZWA MAULIDA", "MISYEL SULAIMAN ALBUSTAMI", "MOHAMAD RIFA EL FARABI", "MUHAMMAD IHSAN FAKHRI", "MUHAMMAD KHAIRAN", "NABILA ATHIFAH PUTRI", "NASRULLOH ABDUL AZIS", "NATASYA KHAIRUNNISA", "QUEEN AZKA KAMALIA", "RADITYA FATUR ROHMAN", "RAFIF BANU ATHALLA", "RENO AL-ZAHRAN", "REYNA FIDELIA", "SILVI SABILLAH", "SYAFIKAH SALSABILLAH", "TANIA AULIA SUSANTO", "WIKANAJI SUBANARTO"],
+            "XII-3": ["AHMAD AQSHO NUR BAYAN", "ARYA BIMANTARA", "AURA JASMINE MAULIDYAZ", "AUREL PUTRA LAIRY ZAIN", "BAGUS IRAWAN", "CEVIN AZARIA EVAN MAULANA", "DANOESHAN ALVINO", "DINI FERISKA", "DZAKY MUNIF AL QOYYIMI", "EVAN ARYA WIBISONO", "FA'IZA DWI ASMARANI", "FAVIAN GUMAY PRATAMA", "FITTRIYA SALSABILA RAMADHANI", "FRISKA NURLIA SYAM", "KALYA FAYZA AZZAHRA", "KARNESIA FAIHA DZIL IZZATI", "KEYLLA OCKTAVIA NASUTION", "KHAIRA ADZRA AFIFAH", "MUHAMMAD FAKHRI RAMADHAN", "MUHAMMAD RASYA SAPUTRA", "NASYA DWI OKTAVIANI", "NAURA FERIAL FEBRIANTI", "RAINA SHABIRAH AZALIA", "RASYA ABEL FAEYZA", "RHEINA AZZAHRA", "SIGIT ARY PURNOMO", "SUBHAN HABIBI", "SULTAN ATHALLAH SHIDQI"]
+        };
+
+        function handleClassChange() {
+            const selectedClass = document.getElementById('studentClass').value;
+            const baseLevel = selectedClass.split('-')[0];
+            const d = new Date();
+            const m = d.getMonth() + 1;
+
+            const themeBox = document.getElementById('monthly-theme');
+            if (levelThemes[baseLevel] && levelThemes[baseLevel][m]) {
+                themeBox.innerText = `"${levelThemes[baseLevel][m]}"`;
+            } else {
+                themeBox.innerText = `"Tema Literasi Umum"`;
+            }
+
+            const studentSelect = document.getElementById('studentName');
+            studentSelect.innerHTML = '<option value="" disabled selected>-- Pilih Nama Kamu --</option>';
+            studentSelect.disabled = false;
+            studentSelect.classList.remove('bg-slate-100');
+            studentSelect.classList.add('bg-white');
+
+            if (schoolData[selectedClass]) {
+                schoolData[selectedClass].forEach(st => {
+                    let opt = document.createElement('option');
+                    opt.value = st;
+                    opt.textContent = st;
+                    studentSelect.appendChild(opt);
+                });
+            }
+        }
+
+        function handleSubmit(e) {
+            e.preventDefault();
+            const payload = {
+                studentClass: document.getElementById('studentClass').value,
+                studentName: document.getElementById('studentName').value,
+                selectedDate: document.getElementById('tuesdayDate').value,
+                notes: document.getElementById('notes').value
+            };
+
+            document.getElementById('loadingMessage').classList.remove('hidden');
+            document.getElementById('submitBtn').disabled = true;
+
+            fetch(WEB_APP_URL, {
+                method: 'POST',
+                body: JSON.stringify(payload)
+            })
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('loadingMessage').classList.add('hidden');
+                document.getElementById('submitBtn').disabled = false;
+                document.getElementById('literacyForm').reset();
+                document.getElementById('studentName').innerHTML = '<option value="" disabled selected>-- Pilih Kelas Terlebih Dahulu --</option>';
+                document.getElementById('studentName').disabled = true;
+                document.getElementById('studentName').classList.add('bg-slate-100');
+                document.getElementById('monthly-theme').innerText = `"Silakan pilih kelas terlebih dahulu..."`;
+
+                const succ = document.getElementById('successMessage');
+                succ.classList.remove('hidden');
+                setTimeout(() => succ.classList.add('hidden'), 5000);
+            })
+            .catch(err => {
+                document.getElementById('loadingMessage').classList.add('hidden');
+                document.getElementById('submitBtn').disabled = false;
+                alert("Gagal mengirim data. Pastikan URL Web App Google Script benar.");
+            });
+        }
+    </script>
+</body>
+</html>
