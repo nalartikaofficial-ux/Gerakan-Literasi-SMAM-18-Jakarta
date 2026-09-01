@@ -20,40 +20,42 @@
                 
                 <div class="mt-4 bg-white/10 backdrop-blur-md p-3.5 rounded-xl border border-white/20 text-left">
                     <p class="text-[11px] text-blue-200 uppercase tracking-wider font-medium">Tema Literasi Bulan Ini</p>
-                    <p id="monthly-theme" class="text-base font-semibold text-white mt-0.5">Silakan pilih kelas terlebih dahulu...</p>
+                    <p id="monthly-theme" class="text-base font-semibold text-white mt-0.5">Silakan pilih kelas dan bulan terlebih dahulu...</p>
                 </div>
             </header>
 
             <main class="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-100">
                 <h2 class="text-lg font-bold text-slate-900 mb-1">Form Pengisian Literasi Selasa</h2>
-                <p class="text-xs text-slate-500 mb-6">Pilih kelas, nama lengkap, tanggal kegiatan, dan masukkan catatan ringkasan buku.</p>
+                <p class="text-xs text-slate-500 mb-6">Pilih kelas, nama lengkap, bulan, tanggal kegiatan Selasa, dan masukkan catatan ringkasan buku.</p>
 
-                <form id="literacyForm" action="https://script.google.com/macros/s/AKfycby6ctjajVD01rAt2g6LpHCZUEKsDdxbc-vvkQ6f211ufOb3dEUwoiQZ7mpROU_oxcLj/exec" method="POST" target="hidden_iframe" onsubmit="handleFormSubmit()" class="space-y-4">
+                <form id="literacyForm" action="https://script.google.com/macros/s/AKfycby6ctjajVD01rAt2g6LpHCZUEKsDdxbc-vvkQ6f211ufOb3dEUwoiQZ7mpROU_oxcLj/exec" method="POST" target="hidden_iframe" class="space-y-4">
                     
+                    <!-- Pilih Kelas -->
                     <div>
                         <label for="studentClass" class="block text-xs font-semibold text-slate-700 mb-1 uppercase">Pilih Kelas</label>
-                        <select id="studentClass" name="studentClass" onchange="handleClassChange()" required
+                        <select id="studentClass" name="studentClass" onchange="updateFormState()" required
                             class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 outline-none text-sm bg-white">
                             <option value="" disabled selected>-- Pilih Kelas Anda --</option>
                             <optgroup label="Kelas X">
-                                <option value="X-1">Kelas X-1</option>
-                                <option value="X-2">Kelas X-2</option>
-                                <option value="X-3">Kelas X-3</option>
-                                <option value="X-4">Kelas X-4</option>
+                                <option value="X-1">X-1</option>
+                                <option value="X-2">X-2</option>
+                                <option value="X-3">X-3</option>
+                                <option value="X-4">X-4</option>
                             </optgroup>
                             <optgroup label="Kelas XI">
-                                <option value="XI-1">Kelas XI-1</option>
-                                <option value="XI-2">Kelas XI-2</option>
-                                <option value="XI-3">Kelas XI-3</option>
+                                <option value="XI-1">XI-1</option>
+                                <option value="XI-2">XI-2</option>
+                                <option value="XI-3">XI-3</option>
                             </optgroup>
                             <optgroup label="Kelas XII">
-                                <option value="XII-1">Kelas XII-1</option>
-                                <option value="XII-2">Kelas XII-2</option>
-                                <option value="XII-3">Kelas XII-3</option>
+                                <option value="XII-1">XII-1</option>
+                                <option value="XII-2">XII-2</option>
+                                <option value="XII-3">XII-3</option>
                             </optgroup>
                         </select>
                     </div>
 
+                    <!-- Pilih Nama Murid -->
                     <div>
                         <label for="studentName" class="block text-xs font-semibold text-slate-700 mb-1 uppercase">Nama Murid</label>
                         <select id="studentName" name="studentName" required disabled
@@ -62,17 +64,37 @@
                         </select>
                     </div>
 
+                    <!-- Pilih Bulan (Januari - Desember) -->
                     <div>
-                        <label for="tuesdayDate" class="block text-xs font-semibold text-slate-700 mb-1 uppercase">Pilih Tanggal Kegiatan (Hari Selasa)</label>
-                        <select id="tuesdayDate" name="selectedDate" required
+                        <label for="selectedMonth" class="block text-xs font-semibold text-slate-700 mb-1 uppercase">Pilih Bulan Kegiatan</label>
+                        <select id="selectedMonth" name="selectedMonth" onchange="updateFormState()" required
                             class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 outline-none text-sm bg-white">
-                            <option value="" disabled selected>-- Pilih Tanggal Selasa --</option>
-                            <option value="11/08/2026">Selasa, 11 Agustus 2026</option>
-                            <option value="18/08/2026">Selasa, 18 Agustus 2026</option>
-                            <option value="25/08/2026">Selasa, 25 Agustus 2026</option>
+                            <option value="" disabled selected>-- Pilih Bulan --</option>
+                            <option value="1">Januari</option>
+                            <option value="2">Februari</option>
+                            <option value="3">Maret</option>
+                            <option value="4">April</option>
+                            <option value="5">Mei</option>
+                            <option value="6">Juni</option>
+                            <option value="7">Juli</option>
+                            <option value="8">Agustus</option>
+                            <option value="9">September</option>
+                            <option value="10">Oktober</option>
+                            <option value="11">November</option>
+                            <option value="12">Desember</option>
                         </select>
                     </div>
 
+                    <!-- Pilih Tanggal Selasa (Otomatis menyesuaikan bulan yang dipilih) -->
+                    <div>
+                        <label for="tuesdayDate" class="block text-xs font-semibold text-slate-700 mb-1 uppercase">Pilih Tanggal Kegiatan (Hari Selasa)</label>
+                        <select id="tuesdayDate" name="selectedDate" required disabled
+                            class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 outline-none text-sm bg-slate-100">
+                            <option value="" disabled selected>-- Pilih Bulan Terlebih Dahulu --</option>
+                        </select>
+                    </div>
+
+                    <!-- Judul Bacaan / Catatan -->
                     <div>
                         <label for="notes" class="block text-xs font-semibold text-slate-700 mb-1 uppercase">Judul Bacaan / Catatan Ringkasan</label>
                         <textarea id="notes" name="notes" rows="3" required
@@ -80,7 +102,7 @@
                             placeholder="Contoh: jaga alam dengan tradisi Nusantara..."></textarea>
                     </div>
 
-                    <button type="submit" id="submitBtn"
+                    <button type="submit" id="submitBtn" onclick="prepareSubmit()"
                         class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl shadow-md transition text-sm">
                         Kirim Data Literasi
                     </button>
@@ -145,40 +167,76 @@
             "XII-3": ["AHMAD AQSHO NUR BAYAN", "ARYA BIMANTARA", "AURA JASMINE MAULIDYAZ", "AUREL PUTRA LAIRY ZAIN", "BAGUS IRAWAN", "CEVIN AZARIA EVAN MAULANA", "DANOESHAN ALVINO", "DINI FERISKA", "DZAKY MUNIF AL QOYYIMI", "EVAN ARYA WIBISONO", "FA'IZA DWI ASMARANI", "FAVIAN GUMAY PRATAMA", "FITTRIYA SALSABILA RAMADHANI", "FRISKA NURLIA SYAM", "KALYA FAYZA AZZAHRA", "KARNESIA FAIHA DZIL IZZATI", "KEYLLA OCKTAVIA NASUTION", "KHAIRA ADZRA AFIFAH", "MUHAMMAD FAKHRI RAMADHAN", "MUHAMMAD RASYA SAPUTRA", "NASYA DWI OKTAVIANI", "NAURA FERIAL FEBRIANTI", "RAINA SHABIRAH AZALIA", "RASYA ABEL FAEYZA", "RHEINA AZZAHRA", "SIGIT ARY PURNOMO", "SUBHAN HABIBI", "SULTAN ATHALLAH SHIDQI"]
         };
 
-        function handleClassChange() {
+        function updateFormState() {
             const selectedClass = document.getElementById('studentClass').value;
-            const baseLevel = selectedClass.split('-')[0];
-            const d = new Date();
-            const m = d.getMonth() + 1;
+            const selectedMonth = parseInt(document.getElementById('selectedMonth').value);
+            
+            if (selectedClass) {
+                const baseLevel = selectedClass.split('-')[0];
+                
+                // Update Tema Berdasarkan Kelas dan Bulan yang Dipilih
+                const themeBox = document.getElementById('monthly-theme');
+                if (levelThemes[baseLevel] && levelThemes[baseLevel][selectedMonth]) {
+                    themeBox.innerText = `"${levelThemes[baseLevel][selectedMonth]}"`;
+                } else {
+                    themeBox.innerText = `"Tema Literasi Umum"`;
+                }
 
-            const themeBox = document.getElementById('monthly-theme');
-            if (levelThemes[baseLevel] && levelThemes[baseLevel][m]) {
-                themeBox.innerText = `"${levelThemes[baseLevel][m]}"`;
-            } else {
-                themeBox.innerText = `"Tema Literasi Umum"`;
+                // Update List Nama Murid
+                const studentSelect = document.getElementById('studentName');
+                studentSelect.innerHTML = '<option value="" disabled selected>-- Pilih Nama Kamu --</option>';
+                studentSelect.disabled = false;
+                studentSelect.classList.remove('bg-slate-100');
+                studentSelect.classList.add('bg-white');
+
+                if (schoolData[selectedClass]) {
+                    schoolData[selectedClass].forEach(st => {
+                        let opt = document.createElement('option');
+                        opt.value = st;
+                        opt.textContent = st;
+                        studentSelect.appendChild(opt);
+                    });
+                }
             }
 
-            const studentSelect = document.getElementById('studentName');
-            studentSelect.innerHTML = '<option value="" disabled selected>-- Pilih Nama Kamu --</option>';
-            studentSelect.disabled = false;
-            studentSelect.classList.remove('bg-slate-100');
-            studentSelect.classList.add('bg-white');
+            // Update Tanggal Hari Selasa Berdasarkan Bulan yang Dipilih
+            if (selectedMonth) {
+                const dateSelect = document.getElementById('tuesdayDate');
+                dateSelect.innerHTML = '<option value="" disabled selected>-- Pilih Tanggal Selasa --</option>';
+                dateSelect.disabled = false;
+                dateSelect.classList.remove('bg-slate-100');
+                dateSelect.classList.add('bg-white');
 
-            if (schoolData[selectedClass]) {
-                schoolData[selectedClass].forEach(st => {
-                    let opt = document.createElement('option');
-                    opt.value = st;
-                    opt.textContent = st;
-                    studentSelect.appendChild(opt);
-                });
+                const year = 2026; // Tahun Ajaran 2026/2027
+                let date = new Date(year, selectedMonth - 1, 1);
+                
+                while (date.getDay() !== 2) { // 2 = Selasa
+                    date.setDate(date.getDate() + 1);
+                }
+
+                const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+
+                while (date.getMonth() === (selectedMonth - 1)) {
+                    let day = String(date.getDate()).padStart(2, '0');
+                    let mo = String(date.getMonth() + 1).padStart(2, '0');
+                    let yr = date.getFullYear();
+                    let formattedDate = `${day}/${mo}/${yr}`;
+
+                    let option = document.createElement('option');
+                    option.value = formattedDate;
+                    option.textContent = `Selasa, ${day} ${monthNames[date.getMonth()]} ${yr}`;
+                    dateSelect.appendChild(option);
+
+                    date.setDate(date.getDate() + 7);
+                }
             }
         }
 
-        document.getElementById('literacyForm').addEventListener('submit', function() {
+        function prepareSubmit() {
             isSubmitted = true;
             document.getElementById('submitBtn').disabled = true;
             document.getElementById('submitBtn').innerText = "Mengirim...";
-        });
+        }
 
         let isSubmitted = false;
         function iframeLoaded() {
@@ -187,7 +245,10 @@
                 document.getElementById('studentName').innerHTML = '<option value="" disabled selected>-- Pilih Kelas Terlebih Dahulu --</option>';
                 document.getElementById('studentName').disabled = true;
                 document.getElementById('studentName').classList.add('bg-slate-100');
-                document.getElementById('monthly-theme').innerText = `"Silakan pilih kelas terlebih dahulu..."`;
+                document.getElementById('tuesdayDate').innerHTML = '<option value="" disabled selected>-- Pilih Bulan Terlebih Dahulu --</option>';
+                document.getElementById('tuesdayDate').disabled = true;
+                document.getElementById('tuesdayDate').classList.add('bg-slate-100');
+                document.getElementById('monthly-theme').innerText = `"Silakan pilih kelas dan bulan terlebih dahulu..."`;
                 document.getElementById('submitBtn').disabled = false;
                 document.getElementById('submitBtn').innerText = "Kirim Data Literasi";
 
