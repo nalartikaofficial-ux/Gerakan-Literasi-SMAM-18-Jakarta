@@ -28,7 +28,6 @@
                 <h2 class="text-lg font-bold text-slate-900 mb-1">Form Pengisian Literasi Selasa</h2>
                 <p class="text-xs text-slate-500 mb-6">Pilih kelas, nama lengkap, tanggal kegiatan, dan masukkan catatan ringkasan buku.</p>
 
-                <!-- Form menggunakan action langsung ke Google Script & target iframe -->
                 <form id="literacyForm" action="https://script.google.com/macros/s/AKfycby6ctjajVD01rAt2g6LpHCZUEKsDdxbc-vvkQ6f211ufOb3dEUwoiQZ7mpROU_oxcLj/exec" method="POST" target="hidden_iframe" onsubmit="handleFormSubmit()" class="space-y-4">
                     
                     <div>
@@ -37,20 +36,20 @@
                             class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 outline-none text-sm bg-white">
                             <option value="" disabled selected>-- Pilih Kelas Anda --</option>
                             <optgroup label="Kelas X">
-                                <option value="X-1">Kelas X.1</option>
-                                <option value="X-2">Kelas X.2</option>
-                                <option value="X-3">Kelas X.3</option>
-                                <option value="X-4">Kelas X.4</option>
+                                <option value="X-1">Kelas X-1</option>
+                                <option value="X-2">Kelas X-2</option>
+                                <option value="X-3">Kelas X-3</option>
+                                <option value="X-4">Kelas X-4</option>
                             </optgroup>
                             <optgroup label="Kelas XI">
-                                <option value="XI-1">Kelas XI.1</option>
-                                <option value="XI-2">Kelas XI.2</option>
-                                <option value="XI-3">Kelas XI.3</option>
+                                <option value="XI-1">Kelas XI-1</option>
+                                <option value="XI-2">Kelas XI-2</option>
+                                <option value="XI-3">Kelas XI-3</option>
                             </optgroup>
                             <optgroup label="Kelas XII">
-                                <option value="XII-1">Kelas XII.1</option>
-                                <option value="XII-2">Kelas XII.2</option>
-                                <option value="XII-3">Kelas XII.3</option>
+                                <option value="XII-1">Kelas XII-1</option>
+                                <option value="XII-2">Kelas XII-2</option>
+                                <option value="XII-3">Kelas XII-3</option>
                             </optgroup>
                         </select>
                     </div>
@@ -87,7 +86,6 @@
                     </button>
                 </form>
 
-                <!-- Iframe tersembunyi untuk menampung respon tanpa reload halaman -->
                 <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="iframeLoaded()"></iframe>
 
                 <div id="successMessage" class="hidden mt-4 p-4 bg-emerald-50 border border-emerald-200 rounded-xl text-center">
