@@ -23,8 +23,9 @@
             <!-- Form Utama -->
             <main class="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-100">
                 <h2 class="text-lg font-bold text-slate-900 mb-1">Form Pengisian Literasi Selasa</h2>
-                <p class="text-xs text-slate-500 mb-6">Isi data diri, pilih tanggal kegiatan, tulis judul buku, dan ringkasan bacaan Anda dengan lengkap.</p>
+                <p class="text-xs text-slate-500 mb-6">Isi data diri, pilih kelas, pilih tema bulanan, tanggal, tulis judul buku, dan ringkasan bacaan Anda.</p>
 
+                <!-- Ganti "URL_WEB_APP_ANDA_DISINI" dengan URL Web App Apps Script Anda -->
                 <form id="literacyForm" action="https://script.google.com/macros/s/AKfycbywal_TIKj0Z2V68LSJzdcZy18kzKdmjBskSPpB1xhL-ZJ4mbsuINp0HTffqClpHVOC/exec" method="POST" target="hidden_iframe" class="space-y-4">
                     
                     <!-- Nama Lengkap (Wajib Capslock) -->
@@ -38,7 +39,7 @@
                     <!-- Pilihan Kelas -->
                     <div>
                         <label for="studentClass" class="block text-xs font-semibold text-slate-700 mb-1 uppercase">Pilih Kelas</label>
-                        <select id="studentClass" name="studentClass" required
+                        <select id="studentClass" name="studentClass" onchange="updateThemes()" required
                             class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 outline-none text-sm bg-white">
                             <option value="" disabled selected>-- Pilih Kelas Anda --</option>
                             <optgroup label="Kelas X">
@@ -60,7 +61,16 @@
                         </select>
                     </div>
 
-                    <!-- Pilih Tanggal Kalender (Otomatis Hari Ini, Bisa Dipilih Bebas) -->
+                    <!-- Pilihan Dropdown Tema Bulanan -->
+                    <div>
+                        <label for="monthlyTheme" class="block text-xs font-semibold text-slate-700 mb-1 uppercase">Pilih Tema / Judul Literasi Bulanan</label>
+                        <select id="monthlyTheme" name="monthlyTheme" required disabled
+                            class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 outline-none text-sm bg-slate-100 cursor-pointer">
+                            <option value="" disabled selected>-- Pilih Kelas Terlebih Dahulu --</option>
+                        </select>
+                    </div>
+
+                    <!-- Pilih Tanggal Kalender -->
                     <div>
                         <label for="tuesdayDate" class="block text-xs font-semibold text-slate-700 mb-1 uppercase">Tanggal Kegiatan (Pilih Kalender)</label>
                         <input type="date" id="tuesdayDate" name="selectedDate" required
@@ -69,7 +79,7 @@
 
                     <!-- Judul Bacaan (Wajib Capslock) -->
                     <div>
-                        <label for="bookTitle" class="block text-xs font-semibold text-slate-700 mb-1 uppercase">Judul Bacaan / Buku</label>
+                        <label for="bookTitle" class="block text-xs font-semibold text-slate-700 mb-1 uppercase">Judul Buku / Sumber Bacaan</label>
                         <input type="text" id="bookTitle" name="bookTitle" required oninput="convertToUppercase(this)"
                             class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 outline-none text-sm uppercase bg-white"
                             placeholder="CONTOH: SEJARAH PERJUANGAN BANGSA INDONESIA">
@@ -104,14 +114,67 @@
     </div>
 
     <script>
-        const WEB_APP_URL = "URL_WEB_APP_ANDA_DISINI";
         let isSubmitted = false;
+
+        // Data Tema Bulanan per Jenjang Kelas
+        const levelThemes = {
+            "X": [
+                "Januari: Biografi → Meneladani Tokoh Inspiratif",
+                "Februari: Puisi → Merangkai Rasa dalam Kata",
+                "Agustus: Laporan Hasil Observasi → Mengenal Lingkungan Sekitar",
+                "September: Laporan Hasil Observasi → Mengenal Lingkungan Sekitar",
+                "Oktober: Anekdot → Humor yang Mendidik dan Mengkritik",
+                "November: Cerita Rakyat → Merawat Warisan Budaya Nusantara",
+                "Desember: Negosiasi → Membangun Kesepakatan dengan Bijak"
+            ],
+            "XI": [
+                "Januari: Drama → Panggung Ekspresi dan Kolaborasi",
+                "Februari: Karya Tulis Ilmiah → Meneliti untuk Memberi Solusi",
+                "Agustus: Berita → Mengabarkan Fakta, Menebar Manfaat",
+                "September: Berita → Mengabarkan Fakta, Menebar Manfaat",
+                "Oktober: Argumentasi dalam Poster → Menyuarakan Kepedulian melalui Poster",
+                "November: Cerpen Sejarah → Belajar Sejarah melalui Cerita",
+                "Desember: Ceramah → Menebarkan Nilai Kebaikan"
+            ],
+            "XII": [
+                "Januari: Kritik dan Esai → Berpikir Kritis, Menulis Cerdas",
+                "Februari: Novel → Menyelami Kehidupan melalui Novel",
+                "Agustus: Surat Lamaran Pekerjaan → Menyiapkan Langkah Menuju Karier",
+                "September: Surat Lamaran Pekerjaan → Menyiapkan Langkah Menuju Karier",
+                "Oktober: Editorial → Menyikapi Isu dengan Bijaksana",
+                "November: Artikel → Menulis untuk Mengedukasi",
+                "Desember: Cerita Sejarah → Mengenang Masa Lalu, Menata Masa Depan"
+            ]
+        };
 
         // Otomatis set tanggal hari ini saat form dibuka
         window.onload = function() {
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('tuesdayDate').value = today;
         };
+
+        // Fungsi Update Dropdown Tema Berdasarkan Kelas yang Dipilih
+        function updateThemes() {
+            const selectedClass = document.getElementById('studentClass').value;
+            const themeSelect = document.getElementById('monthlyTheme');
+
+            themeSelect.innerHTML = '<option value="" disabled selected>-- Pilih Tema Literasi Bulanan --</option>';
+            themeSelect.disabled = false;
+            themeSelect.classList.remove('bg-slate-100');
+            themeSelect.classList.add('bg-white');
+
+            if (selectedClass) {
+                const baseLevel = selectedClass.split('-')[0]; // Ambil "X", "XI", atau "XII"
+                if (levelThemes[baseLevel]) {
+                    levelThemes[baseLevel].forEach(theme => {
+                        let opt = document.createElement('option');
+                        opt.value = theme;
+                        opt.textContent = theme;
+                        themeSelect.appendChild(opt);
+                    });
+                }
+            }
+        }
 
         // Fungsi otomatis mengubah ketikan input teks menjadi HURUF KAPITAL (CAPSLOCK)
         function convertToUppercase(input) {
@@ -130,7 +193,14 @@
         function iframeLoaded() {
             if (isSubmitted) {
                 document.getElementById('literacyForm').reset();
-                // Reset tanggal kembali ke hari ini setelah submit berhasil
+                
+                // Reset dropdown tema & disable kembali
+                const themeSelect = document.getElementById('monthlyTheme');
+                themeSelect.innerHTML = '<option value="" disabled selected>-- Pilih Kelas Terlebih Dahulu --</option>';
+                themeSelect.disabled = true;
+                themeSelect.classList.add('bg-slate-100');
+
+                // Reset tanggal ke hari ini
                 const today = new Date().toISOString().split('T')[0];
                 document.getElementById('tuesdayDate').value = today;
 
