@@ -28,13 +28,12 @@
                 <h2 class="text-lg font-bold text-slate-900 mb-1">Form Pengisian Literasi Selasa</h2>
                 <p class="text-xs text-slate-500 mb-6">Pilih kelas, nama lengkap, bulan, tanggal kegiatan Selasa, dan masukkan catatan ringkasan buku.</p>
 
-                <!-- Form diarahkan ke Apps Script via target iframe -->
                 <form id="literacyForm" action="https://script.google.com/macros/s/AKfycbzlu2H3wTd3MQ4RXmTDB8NLSXJKdUqDk_vz2_MwZwieUVYm0GzdibFHNqEvGOc-1Wh3/exec" method="POST" target="hidden_iframe" class="space-y-4">
                     
-                    <!-- Pilih Kelas -->
+                    <!-- Pilih Kelas (Memicu fungsi handleClassChange) -->
                     <div>
                         <label for="studentClass" class="block text-xs font-semibold text-slate-700 mb-1 uppercase">Pilih Kelas</label>
-                        <select id="studentClass" name="studentClass" required
+                        <select id="studentClass" name="studentClass" onchange="handleClassChange()" required
                             class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 outline-none text-sm bg-white">
                             <option value="" disabled selected>-- Pilih Kelas Anda --</option>
                             <optgroup label="Kelas X">
@@ -65,10 +64,10 @@
                         </select>
                     </div>
 
-                    <!-- Pilih Bulan (Januari - Desember) -->
+                    <!-- Pilih Bulan (Memicu fungsi handleMonthChange) -->
                     <div>
                         <label for="selectedMonth" class="block text-xs font-semibold text-slate-700 mb-1 uppercase">Pilih Bulan Kegiatan</label>
-                        <select id="selectedMonth" required
+                        <select id="selectedMonth" name="selectedMonth" onchange="handleMonthChange()" required
                             class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 outline-none text-sm bg-white">
                             <option value="" disabled selected>-- Pilih Bulan --</option>
                             <option value="1">Januari</option>
@@ -127,31 +126,31 @@
 
         const levelThemes = {
             "X": {
+                1: "Biografi → Meneladani Tokoh Inspiratif",
+                2: "Puisi → Merangkai Rasa dalam Kata",
                 8: "Laporan Hasil Observasi → Mengenal Lingkungan Sekitar",
                 9: "Laporan Hasil Observasi → Mengenal Lingkungan Sekitar",
                 10: "Anekdot → Humor yang Mendidik dan Mengkritik",
                 11: "Cerita Rakyat → Merawat Warisan Budaya Nusantara",
-                12: "Negosiasi → Membangun Kesepakatan dengan Bijak",
-                1: "Biografi → Meneladani Tokoh Inspiratif",
-                2: "Puisi → Merangkai Rasa dalam Kata"
+                12: "Negosiasi → Membangun Kesepakatan dengan Bijak"
             },
             "XI": {
+                1: "Drama → Panggung Ekspresi dan Kolaborasi",
+                2: "Karya Tulis Ilmiah → Meneliti untuk Memberi Solusi",
                 8: "Berita → Mengabarkan Fakta, Menebar Manfaat",
                 9: "Berita → Mengabarkan Fakta, Menebar Manfaat",
                 10: "Argumentasi dalam Poster → Menyuarakan Kepedulian melalui Poster",
                 11: "Cerpen Sejarah → Belajar Sejarah melalui Cerita",
-                12: "Ceramah → Menebarkan Nilai Kebaikan",
-                1: "Drama → Panggung Ekspresi dan Kolaborasi",
-                2: "Karya Tulis Ilmiah → Meneliti untuk Memberi Solusi"
+                12: "Ceramah → Menebarkan Nilai Kebaikan"
             },
             "XII": {
+                1: "Kritik dan Esai → Berpikir Kritis, Menulis Cerdas",
+                2: "Novel → Menyelami Kehidupan melalui Novel",
                 8: "Surat Lamaran Pekerjaan → Menyiapkan Langkah Menuju Karier",
                 9: "Surat Lamaran Pekerjaan → Menyiapkan Langkah Menuju Karier",
                 10: "Editorial → Menyikapi Isu dengan Bijaksana",
                 11: "Artikel → Menulis untuk Mengedukasi",
-                12: "Cerita Sejarah → Mengenang Masa Lalu, Menata Masa Depan",
-                1: "Kritik dan Esai → Berpikir Kritis, Menulis Cerdas",
-                2: "Novel → Menyelami Kehidupan melalui Novel"
+                12: "Cerita Sejarah → Mengenang Masa Lalu, Menata Masa Depan"
             }
         };
 
@@ -168,18 +167,15 @@
             "XII-3": ["AHMAD AQSHO NUR BAYAN", "ARYA BIMANTARA", "AURA JASMINE MAULIDYAZ", "AUREL PUTRA LAIRY ZAIN", "BAGUS IRAWAN", "CEVIN AZARIA EVAN MAULANA", "DANOESHAN ALVINO", "DINI FERISKA", "DZAKY MUNIF AL QOYYIMI", "EVAN ARYA WIBISONO", "FA'IZA DWI ASMARANI", "FAVIAN GUMAY PRATAMA", "FITTRIYA SALSABILA RAMADHANI", "FRISKA NURLIA SYAM", "KALYA FAYZA AZZAHRA", "KARNESIA FAIHA DZIL IZZATI", "KEYLLA OCKTAVIA NASUTION", "KHAIRA ADZRA AFIFAH", "MUHAMMAD FAKHRI RAMADHAN", "MUHAMMAD RASYA SAPUTRA", "NASYA DWI OKTAVIANI", "NAURA FERIAL FEBRIANTI", "RAINA SHABIRAH AZALIA", "RASYA ABEL FAEYZA", "RHEINA AZZAHRA", "SIGIT ARY PURNOMO", "SUBHAN HABIBI", "SULTAN ATHALLAH SHIDQI"]
         };
 
-        // Event Listener murni via Javascript tanpa inline onchange yang gampang error
-        document.getElementById('studentClass').addEventListener('change', updateFormState);
-        document.getElementById('selectedMonth').addEventListener('change', updateFormState);
-
-        function updateFormState() {
+        // 1. Fungsi saat Kelas Dipilih (Memunculkan Nama Murid & Update Tema)
+        function handleClassChange() {
             const selectedClass = document.getElementById('studentClass').value;
             const selectedMonth = parseInt(document.getElementById('selectedMonth').value);
             
-            // 1. Update List Nama Murid & Tema Bulanan
             if (selectedClass) {
                 const baseLevel = selectedClass.split('-')[0];
                 
+                // Update Tema
                 const themeBox = document.getElementById('monthly-theme');
                 if (!isNaN(selectedMonth) && levelThemes[baseLevel] && levelThemes[baseLevel][selectedMonth]) {
                     themeBox.innerText = `"${levelThemes[baseLevel][selectedMonth]}"`;
@@ -187,6 +183,7 @@
                     themeBox.innerText = `"Silakan pilih bulan juga untuk melihat tema..."`;
                 }
 
+                // Update List Nama Murid
                 const studentSelect = document.getElementById('studentName');
                 studentSelect.innerHTML = '<option value="" disabled selected>-- Pilih Nama Kamu --</option>';
                 studentSelect.disabled = false;
@@ -202,9 +199,24 @@
                     });
                 }
             }
+        }
 
-            // 2. Update Tanggal Hari Selasa Sesuai Bulan yang Dipilih
+        // 2. Fungsi saat Bulan Dipilih (Memunculkan Tanggal Selasa & Update Tema)
+        function handleMonthChange() {
+            const selectedMonth = parseInt(document.getElementById('selectedMonth').value);
+            const selectedClass = document.getElementById('studentClass').value;
+
             if (!isNaN(selectedMonth)) {
+                // Update Tema jika kelas sudah dipilih sebelumnya
+                if (selectedClass) {
+                    const baseLevel = selectedClass.split('-')[0];
+                    const themeBox = document.getElementById('monthly-theme');
+                    if (levelThemes[baseLevel] && levelThemes[baseLevel][selectedMonth]) {
+                        themeBox.innerText = `"${levelThemes[baseLevel][selectedMonth]}"`;
+                    }
+                }
+
+                // Generate Tanggal Selasa
                 const dateSelect = document.getElementById('tuesdayDate');
                 dateSelect.innerHTML = '<option value="" disabled selected>-- Pilih Tanggal Selasa --</option>';
                 dateSelect.disabled = false;
